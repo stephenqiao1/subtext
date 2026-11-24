@@ -1,0 +1,29 @@
+# Data and audio never go in git (Open Yap 1K terms forbid redistribution)
+data/
+*.wav
+*.flac
+*.mp3
+*.parquet
+
+# Model weights and training outputs
+ckpts/
+outputs/
+wandb/
+runs/
+*.pt
+*.safetensors
+
+# External code (F5-TTS lives in its own fork)
+external/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

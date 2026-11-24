@@ -82,6 +82,7 @@ Interspeech 2027 (reported deadline 9 February 2027, unconfirmed) is a stretch.
 - Say plainly what was tested and what wasn't. Never report a script as
   working if it was only syntax-checked.
 - Before claiming anything is "first" or "new", search for prior work again.
+- Commit and push straight to main. No branches or pull requests.
 
 ## How to talk to Stephen
 

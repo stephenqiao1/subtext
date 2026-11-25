@@ -40,7 +40,7 @@ LOG.md            research log, one dated entry per session
 docs/stage3.md    checklist for getting the baseline running
 docs/data.md      datasets, access and licence rules
 notes/papers.md   notes on the ten core papers
-scripts/          setup and smoke-test scripts
+scripts/          setup, smoke-test and evaluation scripts
 src/subtext/      project code (empty until stage 4)
 external/         F5-TTS checkout (not in git)
 data/             audio (not in git)

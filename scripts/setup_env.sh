@@ -21,10 +21,20 @@ fi
 conda activate "$ENV_NAME"
 conda install -y ffmpeg
 
-# PyTorch build for NVIDIA GPUs, as given in the F5-TTS README.
-# Change this line if your CUDA version or hardware differs.
-pip install torch==2.8.0+cu128 torchaudio==2.8.0+cu128 \
-  --extra-index-url https://download.pytorch.org/whl/cu128
+# PyTorch build: picked from the hardware.
+# - NVIDIA GPU (Linux): the CUDA build given in the F5-TTS README. Override
+#   with TORCH_CUDA=cu126 (etc.) if the driver is too old for CUDA 12.8.
+# - Mac or no NVIDIA GPU: the default build (Apple GPU "MPS" on a Mac, else CPU).
+TORCH_VERSION="${TORCH_VERSION:-2.8.0}"
+if command -v nvidia-smi >/dev/null 2>&1 && nvidia-smi >/dev/null 2>&1; then
+  TORCH_CUDA="${TORCH_CUDA:-cu128}"
+  echo "NVIDIA GPU found: installing torch $TORCH_VERSION+$TORCH_CUDA"
+  pip install "torch==$TORCH_VERSION+$TORCH_CUDA" "torchaudio==$TORCH_VERSION+$TORCH_CUDA" \
+    --extra-index-url "https://download.pytorch.org/whl/$TORCH_CUDA"
+else
+  echo "No NVIDIA GPU found: installing default torch $TORCH_VERSION build"
+  pip install "torch==$TORCH_VERSION" "torchaudio==$TORCH_VERSION"
+fi
 
 mkdir -p "$ROOT/external"
 if [ ! -d "$ROOT/external/F5-TTS/.git" ]; then
@@ -37,6 +47,8 @@ import torch
 print("torch", torch.__version__, "| cuda available:", torch.cuda.is_available())
 if torch.cuda.is_available():
     print("gpu:", torch.cuda.get_device_name(0))
+elif torch.backends.mps.is_available():
+    print("gpu: Apple MPS (fine for the smoke test, too slow for the full evaluation)")
 PY
 
 echo

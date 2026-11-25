@@ -93,7 +93,17 @@ Interspeech 2027 (reported deadline 9 February 2027, unconfirmed) is a stretch.
 
 ## Known unknowns
 
-- Whether a pretrained small (158M) F5-TTS checkpoint is published.
 - Whether Open Yap 1K marks breaths.
-- Exact F5-TTS evaluation commands: use `external/F5-TTS/src/f5_tts/eval`.
-- `scripts/*.sh` have been syntax-checked only, never run on a GPU machine.
+- `scripts/run_eval.sh` has been syntax-checked only, never run. It needs an
+  NVIDIA GPU (the F5-TTS evaluation code is hard-wired to CUDA), so it runs on
+  a rented vast.ai machine, not the Mac.
+
+Answered (2026-11-25):
+
+- No pretrained Small (158M) F5-TTS checkpoint is published. The Hugging Face
+  repo `SWivid/F5-TTS` holds only Base models (`F5TTS_Base`,
+  `F5TTS_Base_bigvgan`, `F5TTS_v1_Base`, `F5TTS_v1_Base_no_zero_init`). Plan:
+  fine-tune Base with most layers frozen.
+- `scripts/setup_env.sh` and `scripts/smoke_test.sh` run on the Mac (Apple M4
+  Pro, MPS). Neither has been run on an NVIDIA machine yet.
+- Evaluation commands: wrapped in `scripts/run_eval.sh`.

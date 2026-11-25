@@ -8,8 +8,8 @@ Until that works, no result from your own changes can be trusted.
 - [ ] 1. Send the Open Yap 1K access request (takes human review, so do it first). See `docs/data.md`.
 - [ ] 2. Fork [SWivid/F5-TTS](https://github.com/SWivid/F5-TTS) on GitHub.
 - [ ] 3. Rent a GPU (24 GB is enough for inference and small fine-tunes).
-- [ ] 4. Run `bash scripts/setup_env.sh` (set `F5_REPO` to your fork first).
-- [ ] 5. Run `bash scripts/smoke_test.sh` and listen to the clip.
+- [x] 4. Run `bash scripts/setup_env.sh` (set `F5_REPO` to your fork first). Done on the Mac 2026-11-25 (upstream repo, not a fork); still to run on the GPU machine.
+- [ ] 5. Run `bash scripts/smoke_test.sh` and listen to the clip. Clip generated 2026-11-25 at `external/F5-TTS/tests/infer_cli_basic.wav`; Stephen still to listen.
 - [ ] 6. Reproduce one number from the paper (below).
 - [ ] 7. Write the result in `LOG.md`.
 
@@ -37,10 +37,18 @@ the paper and is reported to score a little better (about 2.0% and 0.68).
 Landing near either pair counts as a pass. Being far off means the setup is
 wrong.
 
-How to run it: follow the evaluation guide inside the F5-TTS repo at
-`external/F5-TTS/src/f5_tts/eval/README.md`. It lists the test-set files and
-scoring models to download and the exact commands. Those commands are not
-copied here because they could not be checked when this file was written.
+How to run it: on a machine with an NVIDIA GPU (the evaluation code only
+runs on CUDA, so not the Mac):
+
+```bash
+bash scripts/run_eval.sh subset   # fixed 200 utterances, pipeline check
+bash scripts/run_eval.sh full     # all 1127 utterances
+```
+
+The script wraps the commands from the evaluation guide at
+`external/F5-TTS/src/f5_tts/eval/README.md` and downloads what they need
+(about 7.5 GB in total, largest single file about 3.1 GB). It has been
+syntax-checked only, never run.
 
 If the full test set is too slow at first, run a fixed subset of 200
 utterances and note that in the log. The number will be noisier but still
@@ -48,9 +56,8 @@ shows whether the setup works.
 
 ## Known unknowns
 
-- Whether a pretrained *small* (158M) checkpoint is published. The paper
-  trained one, but the repo front page only names the Base models. Check the
-  model list on Hugging Face (`SWivid/F5-TTS`). If there is none, fine-tune
+- Answered 2026-11-25: no pretrained *small* (158M) checkpoint is published.
+  The Hugging Face repo `SWivid/F5-TTS` holds only Base models. So fine-tune
   the Base model with most layers frozen instead of training small from
   scratch.
 - Training from scratch is expensive: the paper reports about 8 hours on

@@ -21,7 +21,7 @@ cd "$F5_DIR"
 f5-tts_infer-cli
 
 echo
-echo "Done. The command above prints where the audio file was saved."
+echo "Done. Audio saved to: $F5_DIR/tests/infer_cli_basic.wav"
 echo "Listen to it, then note the result in LOG.md."
 echo
 echo "To try your own voice sample and text:"

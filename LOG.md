@@ -44,3 +44,28 @@ Think: the baseline number needs a rented GPU (vast.ai). Wrote
 Next: set up vast.ai (account, API key, budget), rent one 24 GB GPU, run
 setup, smoke test, then `run_eval.sh subset` and, if sane, `full`. Listen to
 the clip. Send the Open Yap 1K access request.
+
+## 2026-11-25 (later): baseline reproduced
+Ran: on a rented vast.ai RTX 3090 (24 GB, CUDA 12.8 build of PyTorch 2.8.0):
+`setup_env.sh`, `smoke_test.sh`, then `run_eval.sh subset` and
+`run_eval.sh full`. LibriSpeech-PC test-clean, `F5TTS_v1_Base`, 32 steps,
+seed 0, F5-TTS commit 600e5fd.
+Result:
+- fixed subset of 200 utterances: word error rate 2.26%, SIM-o 0.675;
+- full test set, 1127 utterances: word error rate 2.13%, SIM-o 0.674.
+Targets: 2.42% / 0.66 (paper) and about 2.0% / 0.68 (newer checkpoint).
+Generating the full set took 19 minutes. Total vast.ai cost about $0.75.
+Problems fixed in `run_eval.sh` along the way: the speech recogniser's pinned
+audio library would not build (installed without its pins); the eval code
+wants the model file under `ckpts/` (linked from the download cache); the
+recogniser could not find the GPU library cuDNN (path added). The first
+rented machine could not download from Hugging Face and was replaced.
+Think: the setup is right. Both numbers sit between the two target pairs.
+One seed only (the F5-TTS repo script uses three), so the last digit can
+wobble. The scoring pipeline (recogniser plus speaker model) now works and
+can be reused for our own models.
+Not done: nobody has listened to the smoke-test clip yet; F5-TTS is still
+the upstream repo, not a fork; Open Yap 1K access is granted but the data
+(148 GiB) is not downloaded because the Mac has only about 90 GiB free.
+Next: Stephen listens to the clip. Fork F5-TTS. Decide where Open Yap lives.
+Then stage 4.

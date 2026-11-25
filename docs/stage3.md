@@ -5,13 +5,13 @@ Until that works, no result from your own changes can be trusted.
 
 ## Checklist
 
-- [ ] 1. Send the Open Yap 1K access request (takes human review, so do it first). See `docs/data.md`.
+- [x] 1. Send the Open Yap 1K access request (takes human review, so do it first). See `docs/data.md`. Access granted 2026-11-25; not downloaded yet (148 GiB).
 - [ ] 2. Fork [SWivid/F5-TTS](https://github.com/SWivid/F5-TTS) on GitHub.
-- [ ] 3. Rent a GPU (24 GB is enough for inference and small fine-tunes).
-- [x] 4. Run `bash scripts/setup_env.sh` (set `F5_REPO` to your fork first). Done on the Mac 2026-11-25 (upstream repo, not a fork); still to run on the GPU machine.
+- [x] 3. Rent a GPU (24 GB is enough for inference and small fine-tunes). Used one RTX 3090 on vast.ai.
+- [x] 4. Run `bash scripts/setup_env.sh` (set `F5_REPO` to your fork first). Run on the Mac and on the vast.ai GPU machine 2026-11-25 (upstream repo, not a fork).
 - [ ] 5. Run `bash scripts/smoke_test.sh` and listen to the clip. Clip generated 2026-11-25 at `external/F5-TTS/tests/infer_cli_basic.wav`; Stephen still to listen.
-- [ ] 6. Reproduce one number from the paper (below).
-- [ ] 7. Write the result in `LOG.md`.
+- [x] 6. Reproduce one number from the paper (below).
+- [x] 7. Write the result in `LOG.md`.
 
 ## Step 4: point the setup at your fork
 
@@ -47,8 +47,23 @@ bash scripts/run_eval.sh full     # all 1127 utterances
 
 The script wraps the commands from the evaluation guide at
 `external/F5-TTS/src/f5_tts/eval/README.md` and downloads what they need
-(about 7.5 GB in total, largest single file about 3.1 GB). It has been
-syntax-checked only, never run.
+(about 7.5 GB in total, largest single file about 3.1 GB). It was run
+end to end on a rented RTX 3090 on 2026-11-25.
+
+### Result (2026-11-25)
+
+`F5TTS_v1_Base`, 32 steps, seed 0, one RTX 3090, F5-TTS commit 600e5fd.
+
+| Run | Word error rate | SIM-o |
+| --- | --- | --- |
+| Paper (older Base checkpoint) | 2.42% | 0.66 |
+| Reported for `F5TTS_v1_Base` | about 2.0% | about 0.68 |
+| Ours, fixed subset of 200 | 2.26% | 0.675 |
+| **Ours, full test set (1127)** | **2.13%** | **0.674** |
+
+Pass: both numbers sit between the two target pairs. One seed only, so
+expect small run-to-run wobble. Per-utterance scores are in
+`external/F5-TTS/results/` (not in git).
 
 If the full test set is too slow at first, run a fixed subset of 200
 utterances and note that in the log. The number will be noisier but still

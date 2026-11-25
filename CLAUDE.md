@@ -94,9 +94,8 @@ Interspeech 2027 (reported deadline 9 February 2027, unconfirmed) is a stretch.
 ## Known unknowns
 
 - Whether Open Yap 1K marks breaths.
-- `scripts/run_eval.sh` has been syntax-checked only, never run. It needs an
-  NVIDIA GPU (the F5-TTS evaluation code is hard-wired to CUDA), so it runs on
-  a rented vast.ai machine, not the Mac.
+- Where Open Yap 1K will live: it is 148 GiB and the Mac has about 90 GiB
+  free. Access is granted; nothing is downloaded yet.
 
 Answered (2026-11-25):
 
@@ -104,6 +103,15 @@ Answered (2026-11-25):
   repo `SWivid/F5-TTS` holds only Base models (`F5TTS_Base`,
   `F5TTS_Base_bigvgan`, `F5TTS_v1_Base`, `F5TTS_v1_Base_no_zero_init`). Plan:
   fine-tune Base with most layers frozen.
-- `scripts/setup_env.sh` and `scripts/smoke_test.sh` run on the Mac (Apple M4
-  Pro, MPS). Neither has been run on an NVIDIA machine yet.
-- Evaluation commands: wrapped in `scripts/run_eval.sh`.
+- All three scripts in `scripts/` have been run end to end: setup and smoke
+  test on the Mac (Apple M4 Pro, MPS) and on a rented RTX 3090; `run_eval.sh`
+  on the RTX 3090 only (the F5-TTS evaluation code is hard-wired to CUDA).
+- Baseline reproduced: 2.13% word error rate, 0.674 SIM-o on the full
+  LibriSpeech-PC test-clean set. See `docs/stage3.md`.
+
+## Renting GPUs
+
+Use vast.ai through the `vastai` command-line tool (key already set on the
+Mac). Test download speed from Hugging Face before running setup on a new
+machine: one listed as "California" stalled completely. Always destroy the
+machine when done and copy results back first.

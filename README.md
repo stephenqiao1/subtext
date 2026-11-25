@@ -28,7 +28,7 @@ score whether sounds land in sensible places.
 | --- | --- |
 | 1. Pick one question | Done |
 | 2. Read the papers | Done (AI-extracted notes, spot-checked) |
-| 3. Rerun a baseline | **In progress** - see `docs/stage3.md` |
+| 3. Rerun a baseline | Number reproduced (2.13% word error rate, 0.674 SIM-o). Left: listen to the clip, fork F5-TTS - see `docs/stage3.md` |
 | 4. Tiny experiment | Not started |
 | 5. Scale it up | Not started |
 | 6. Write and share | Not started |
@@ -48,12 +48,13 @@ data/             audio (not in git)
 
 ## Quick start
 
-On a machine with an NVIDIA GPU and conda:
+On a machine with conda (the evaluation needs an NVIDIA GPU; the rest also runs on a Mac):
 
 ```bash
 bash scripts/setup_env.sh     # creates the env, installs F5-TTS
 conda activate subtext
 bash scripts/smoke_test.sh    # generates one clip to prove the setup works
+bash scripts/run_eval.sh full # reproduces the paper's test-clean numbers (NVIDIA only)
 ```
 
 ## Licences to keep in mind

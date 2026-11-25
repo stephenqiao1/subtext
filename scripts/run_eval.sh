@@ -42,8 +42,12 @@ export PYTHONWARNINGS="ignore::UserWarning,ignore::FutureWarning"
 
 # 1. Scoring tools. ctranslate2 4.5.0 is the build the guide names for
 #    CUDA 12 + cuDNN 9, which is what the torch cu128 wheels ship.
-pip install -q -e ".[eval]" gdown
-pip install -q ctranslate2==4.5.0
+#    Not `pip install -e .[eval]`: faster_whisper 0.10.1 pins av==10, which
+#    has no ready-made build for Python 3.11 and fails to compile. Installing
+#    it without its pins and adding current versions of what it needs works.
+#    (funasr/modelscope are skipped: only the Chinese test set uses them.)
+pip install -q --no-deps faster_whisper==0.10.1
+pip install -q av ctranslate2==4.5.0 onnxruntime jiwer zhon zhconv gdown
 
 # 2. Test set.
 if [ ! -d "$LS_PATH" ]; then
@@ -57,6 +61,15 @@ fi
 if [ ! -f "$WAVLM_DIR/wavlm_large_finetune.pth" ]; then
   mkdir -p "$WAVLM_DIR"
   gdown "$WAVLM_GDRIVE_ID" -O "$WAVLM_DIR/wavlm_large_finetune.pth"
+fi
+
+# 3b. The eval code wants the model at ckpts/<name>/model_<step>.safetensors,
+#     not in the Hugging Face cache where the smoke test puts it. Link it.
+CKPT_FILE="ckpts/$MODEL_NAME/model_$CKPTSTEP.safetensors"
+if [ ! -e "$CKPT_FILE" ]; then
+  mkdir -p "ckpts/$MODEL_NAME"
+  CACHED="$(python -c "from huggingface_hub import hf_hub_download as d; print(d('SWivid/F5-TTS', '$MODEL_NAME/model_$CKPTSTEP.safetensors'))")"
+  ln -s "$CACHED" "$CKPT_FILE"
 fi
 
 # 4. Pick the utterance list. The eval code reads a fixed path, so for the
@@ -78,9 +91,21 @@ fi
 # 5. Generate, then score. Settings are the script defaults, which match the
 #    paper: 32 steps, Euler, sway sampling -1, CFG 2.0.
 GEN_DIR="results/${MODEL_NAME}_${CKPTSTEP}/ls_pc_test_clean/seed${SEED}_euler_nfe32_vocos_ss-1_cfg2.0_speed1.0"
-rm -rf "$GEN_DIR"
-accelerate launch src/f5_tts/eval/eval_infer_batch.py \
-  -s "$SEED" -n "$MODEL_NAME" -t ls_pc_test_clean -c "$CKPTSTEP" -p "$LS_PATH"
+#    A leftover folder with every clip in it means generation finished but
+#    scoring failed last time: reuse it instead of generating again.
+N_WANT="$(wc -l < "$LIST")"
+N_HAVE=0
+if [ -d "$GEN_DIR" ]; then N_HAVE="$(find "$GEN_DIR" -name '*.wav' | wc -l)"; fi
+if [ "$N_HAVE" -ne "$N_WANT" ]; then
+  rm -rf "$GEN_DIR"
+  accelerate launch src/f5_tts/eval/eval_infer_batch.py \
+    -s "$SEED" -n "$MODEL_NAME" -t ls_pc_test_clean -c "$CKPTSTEP" -p "$LS_PATH"
+fi
+
+#    The speech recogniser (ctranslate2) needs the cuDNN/cuBLAS libraries that
+#    pip installed alongside torch, but does not look there by itself.
+NVIDIA_LIBS="$(python -c "import nvidia.cudnn, nvidia.cublas, os; print(os.path.join(list(nvidia.cudnn.__path__)[0], 'lib') + ':' + os.path.join(list(nvidia.cublas.__path__)[0], 'lib'))")"
+export LD_LIBRARY_PATH="$NVIDIA_LIBS:${LD_LIBRARY_PATH:-}"
 
 python src/f5_tts/eval/eval_librispeech_test_clean.py -e wer -g "$GEN_DIR" -n "$GPUS" -p "$LS_PATH" | tee "$GEN_DIR/_wer_summary.txt"
 python src/f5_tts/eval/eval_librispeech_test_clean.py -e sim -g "$GEN_DIR" -n "$GPUS" -p "$LS_PATH" | tee "$GEN_DIR/_sim_summary.txt"

@@ -79,3 +79,31 @@ baseline was reproduced on; the fork's main is 7 commits ahead of that.
 Think: stay on 600e5fd for now. If we move to newer upstream code, rerun
 `run_eval.sh` first so the baseline still holds.
 Next: Stephen listens to the clip. Decide where Open Yap lives. Then stage 4.
+
+## 2026-11-27 (later): getting ready for stage 4
+Ran: on the Mac only. Downloaded the Open Yap index files and one part of 79
+(2 GiB, 21 conversations), checksums OK, and inspected it. Wrote and tested
+`scripts/fetch_open_yap.sh` (download with temporary links, no AWS keys on
+the rented machine) and `scripts/prep_open_yap.py` (cut conversations into
+clips, fillers removed from the text). Ran F5-TTS's `prepare_csv_wavs.py` on
+the clips from 2 conversations.
+Result:
+- delivery: 1,602 conversations, 1,000.2 h, 148 GiB; the provider deletes it
+  on 26 December 2026;
+- token types in the part inspected: 159,851 `word`, 1,405 `filler`, nothing
+  else. No laugh, cough, noise or breath marks;
+- fillers appear in the plain transcript text;
+- clip cutting on 21 conversations: 5,788 clips, 12.7 h kept out of 31.9 h
+  of track time (mean 7.9 s); most dropped pieces are under 3 s;
+- F5-TTS data preparation accepted 764 clips (1.81 h).
+Think: the answer key is thinner than the dataset page suggests. If the other
+parts match, placement scoring works for fillers out of the box, and laughs
+and breaths need our own detector or leave the question. This touches the
+paper's strongest claim, so settle it early. One part is 1.3% of the data,
+so do not conclude yet. Dropping pieces under 3 s also drops most short
+replies ("Yeah.", "Mhmm."); fine for a first run, revisit later.
+Decided: no kept disk on vast.ai; download again each session.
+Not tested: either new script on a rented machine or on the full set;
+fine-tuning.
+Next: decide what to do about the 26 December deletion. Then stage 4 step 0
+in `docs/stage4.md`: full download, count token types over all parts.

@@ -1,6 +1,7 @@
 # subtext: project context for Claude Code
 
-Read this first. Then read `LOG.md` (latest entry) and `docs/stage3.md`.
+Read this first. Then read `LOG.md` (latest entry), `docs/stage3.md` and
+`docs/stage4.md`.
 
 ## What this project is
 
@@ -94,9 +95,12 @@ Interspeech 2027 (reported deadline 9 February 2027, unconfirmed) is a stretch.
 
 ## Known unknowns
 
-- Whether Open Yap 1K marks breaths.
-- Where Open Yap 1K will live: it is 148 GiB and the Mac has about 90 GiB
-  free. Access is granted; nothing is downloaded yet.
+- Whether laughs, coughs or breaths are marked anywhere in Open Yap 1K. In
+  the one part checked (21 of 1,602 conversations) only fillers are marked.
+  Count token types over all parts on the first full download.
+- What happens to Open Yap 1K after 26 December 2026, when the provider
+  deletes the delivery from S3. No private copy exists yet.
+- Fine-tuning F5-TTS has not been tried.
 
 Answered (2026-11-25):
 
@@ -109,6 +113,13 @@ Answered (2026-11-25):
   on the RTX 3090 only (the F5-TTS evaluation code is hard-wired to CUDA).
 - Baseline reproduced: 2.13% word error rate, 0.674 SIM-o on the full
   LibriSpeech-PC test-clean set. See `docs/stage3.md`.
+
+- Open Yap 1K is not kept on a rented disk (decided 2026-11-27, too costly).
+  Each session downloads it again with `scripts/fetch_open_yap.sh` (links
+  made on the Mac, so AWS keys never leave it) and cuts clips with
+  `scripts/prep_open_yap.py`. See `docs/stage4.md`.
+- Fillers are written in the plain transcripts. `prep_open_yap.py` strips
+  them from the text; their positions go to `answer_key.jsonl`, scoring only.
 
 ## Renting GPUs
 

@@ -29,7 +29,7 @@ score whether sounds land in sensible places.
 | 1. Pick one question | Done |
 | 2. Read the papers | Done (AI-extracted notes, spot-checked) |
 | 3. Rerun a baseline | Number reproduced (2.13% word error rate, 0.674 SIM-o). Left: listen to the clip - see `docs/stage3.md` |
-| 4. Tiny experiment | Not started |
+| 4. Tiny experiment | Not started. Data tools ready - see `docs/stage4.md` |
 | 5. Scale it up | Not started |
 | 6. Write and share | Not started |
 
@@ -38,6 +38,7 @@ score whether sounds land in sensible places.
 ```
 LOG.md            research log, one dated entry per session
 docs/stage3.md    checklist for getting the baseline running
+docs/stage4.md    what is ready and open for the first experiment
 docs/data.md      datasets, access and licence rules
 notes/papers.md   notes on the ten core papers
 scripts/          setup, smoke-test and evaluation scripts

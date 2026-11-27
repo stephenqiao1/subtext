@@ -6,22 +6,20 @@ Until that works, no result from your own changes can be trusted.
 ## Checklist
 
 - [x] 1. Send the Open Yap 1K access request (takes human review, so do it first). See `docs/data.md`. Access granted 2026-11-25; not downloaded yet (148 GiB).
-- [ ] 2. Fork [SWivid/F5-TTS](https://github.com/SWivid/F5-TTS) on GitHub.
+- [x] 2. Fork [SWivid/F5-TTS](https://github.com/SWivid/F5-TTS) on GitHub. Done 2026-11-27: [stephenqiao1/F5-TTS](https://github.com/stephenqiao1/F5-TTS).
 - [x] 3. Rent a GPU (24 GB is enough for inference and small fine-tunes). Used one RTX 3090 on vast.ai.
-- [x] 4. Run `bash scripts/setup_env.sh` (set `F5_REPO` to your fork first). Run on the Mac and on the vast.ai GPU machine 2026-11-25 (upstream repo, not a fork).
+- [x] 4. Run `bash scripts/setup_env.sh` (set `F5_REPO` to your fork first). Run on the Mac and on the vast.ai GPU machine 2026-11-25 (from the upstream repo, before the fork existed).
 - [ ] 5. Run `bash scripts/smoke_test.sh` and listen to the clip. Clip generated 2026-11-25 at `external/F5-TTS/tests/infer_cli_basic.wav`; Stephen still to listen.
 - [x] 6. Reproduce one number from the paper (below).
 - [x] 7. Write the result in `LOG.md`.
 
-## Step 4: point the setup at your fork
+## Step 4: the fork
 
-```bash
-export F5_REPO=https://github.com/<you>/F5-TTS.git
-bash scripts/setup_env.sh
-```
-
-Without `F5_REPO` it clones the upstream repo, which is fine for stage 3.
-Use your fork before stage 4, so your changes have somewhere to live.
+`scripts/setup_env.sh` clones our fork, `stephenqiao1/F5-TTS`, by default.
+In `external/F5-TTS` the remote `origin` is the fork and `upstream` is the
+original SWivid repo. The baseline was reproduced at commit 600e5fd; note the
+commit in `LOG.md` whenever the fork is updated from upstream, because the
+baseline number then needs rechecking.
 
 ## Step 6: reproduce one number
 

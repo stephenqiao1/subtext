@@ -18,8 +18,9 @@ never told where a non-verbal sound goes.
 ## Design
 
 - Base model: F5-TTS (flow matching, text-guided speech infilling), fine-tuned,
-  not trained from scratch. It lives in `external/F5-TTS` (a separate fork,
-  not in this repo).
+  not trained from scratch. It lives in `external/F5-TTS`, a checkout of our
+  fork `stephenqiao1/F5-TTS` (remote `origin`; `upstream` is SWivid). Not in
+  this repo.
 - Slow code: one per phrase. Overall feel (tone, rhythm, mood).
 - Fast code: several per second. Breaths, laughs, hesitations.
 - Predictor: picks both codes from the script (and conversation history).

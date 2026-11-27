@@ -28,7 +28,7 @@ score whether sounds land in sensible places.
 | --- | --- |
 | 1. Pick one question | Done |
 | 2. Read the papers | Done (AI-extracted notes, spot-checked) |
-| 3. Rerun a baseline | Number reproduced (2.13% word error rate, 0.674 SIM-o). Left: listen to the clip, fork F5-TTS - see `docs/stage3.md` |
+| 3. Rerun a baseline | Number reproduced (2.13% word error rate, 0.674 SIM-o). Left: listen to the clip - see `docs/stage3.md` |
 | 4. Tiny experiment | Not started |
 | 5. Scale it up | Not started |
 | 6. Write and share | Not started |

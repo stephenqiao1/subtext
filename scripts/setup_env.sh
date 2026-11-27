@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Sets up the conda env and an editable F5-TTS checkout in external/F5-TTS.
 # Usage: bash scripts/setup_env.sh
-# Optional: export F5_REPO=https://github.com/<you>/F5-TTS.git  (your fork)
+# Clones our fork of F5-TTS by default. Override with: export F5_REPO=<git url>
 set -euo pipefail
 
 ENV_NAME="${ENV_NAME:-subtext}"
-F5_REPO="${F5_REPO:-https://github.com/SWivid/F5-TTS.git}"
+F5_REPO="${F5_REPO:-https://github.com/stephenqiao1/F5-TTS.git}"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 if ! command -v conda >/dev/null 2>&1; then

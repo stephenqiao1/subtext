@@ -69,3 +69,13 @@ the upstream repo, not a fork; Open Yap 1K access is granted but the data
 (148 GiB) is not downloaded because the Mac has only about 90 GiB free.
 Next: Stephen listens to the clip. Fork F5-TTS. Decide where Open Yap lives.
 Then stage 4.
+
+## 2026-11-27
+Ran: forked SWivid/F5-TTS to stephenqiao1/F5-TTS. Pointed `external/F5-TTS`
+at the fork (`origin` = fork, `upstream` = SWivid) and made `setup_env.sh`
+clone the fork by default. Nothing was re-run.
+Result: fork exists. The local checkout stays at 600e5fd, the commit the
+baseline was reproduced on; the fork's main is 7 commits ahead of that.
+Think: stay on 600e5fd for now. If we move to newer upstream code, rerun
+`run_eval.sh` first so the baseline still holds.
+Next: Stephen listens to the clip. Decide where Open Yap lives. Then stage 4.
